@@ -3,4 +3,4 @@
 	url = https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git
 [submodule "amqpCppTrial/openssl"]
 	path = amqpCppTrial/openssl
-	url = git://git.openssl.org/openssl.git
+	url = https://github.com/openssl/openssl.git
