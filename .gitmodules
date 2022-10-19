@@ -4,3 +4,6 @@
 [submodule "amqpCppTrial/openssl"]
 	path = amqpCppTrial/openssl
 	url = https://github.com/openssl/openssl.git
+[submodule "amqpCppTrial/--force"]
+	path = amqpCppTrial/--force
+	url = https://github.com/openssl/openssl.git
