@@ -164,9 +164,6 @@ int main(int argc, char* argv[])
 
     // access to the event loop
     auto *loop = EV_DEFAULT;
-    
-    // handler for libev
-    MyHandler handler(loop);
 
     // init the SSL library
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
@@ -174,6 +171,9 @@ int main(int argc, char* argv[])
 #else
     OPENSSL_init_ssl(0, NULL);
 #endif
+
+    // handler for libev
+    MyHandler handler(loop);
 
     // make a connection
     AMQP::Address address("amqp://guest:guest@localhost/");
