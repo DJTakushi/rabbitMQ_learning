@@ -156,8 +156,12 @@ public:
  *  Main program
  *  @return int
  */
-int main()
+int main(int argc, char* argv[])
 {
+    std::vector<std::string> myArgs;
+    if(argc == 1) myArgs.push_back("default message");
+    else for(int i = 1; i < argc; i++) myArgs.push_back(argv[i]);
+
     // access to the event loop
     auto *loop = EV_DEFAULT;
     
@@ -181,53 +185,58 @@ int main()
 
 
     std::cout<<"declaring Queue...";
-    channel.declareQueue("hello");
-    std::cout<<"done."<<std::endl;
+    channel.declareQueue("hello")
+        .onSuccess([&connection, &channel, &myArgs](){
+            // publish a number of messages
+            std::cout<<"publishing...";
 
-    // std::cout<<"binding Queue...";
-    // channel.bindQueue("", "hello", "hello");
+            channel.startTransaction();
+
+            for(auto it = myArgs.begin(); it!=myArgs.end(); it++) 
+                channel.publish("", "hello", *it);
+
+            channel.commitTransaction()
+                .onSuccess([&connection, &channel]() {
+                    // all messages were successfully published
+                    // should close channel and connection
+                    std::cout<<"closing channel...";
+                    channel.close()
+                        .onSuccess([&connection, &channel]() {                               
+                            // close the connection
+                            std::cout<<"closing connection...";
+                            // don't use deferred responses for connections
+                            connection.close(); 
+                            std::cout<<"done."<<std::endl;
+                        })
+                        .onError([](const char *message){
+                            std::cout << "closing channel failed:  " 
+                                << message <<std::endl;
+                        });
+
+                })
+                .onError([](const char *message) {
+                    // none of the messages were published 
+                    // now we have to do it all over again
+                    std::cout << "none of the messages were published;"<<
+                    " now we have to do it all over again" << std::endl;
+                });
+
+       })
+        .onError([](const char *message){
+            std::cout << "declaring queue failed:  " << message <<std::endl;
+        });
+
+    // std::cout<<"closing channel...";
+    // channel.close()
+    //     .onSuccess([&connection, &channel]() {                               
+    //         // close the connection
+    //         std::cout<<"closing connection...";
+    //         connection.close(); // don't use deferred responses here
+    //     })
+    //     .onError([](const char *message){
+    //         std::cout << "closing channel failed:  " << message <<std::endl;
+    //     });
     // std::cout<<"done."<<std::endl;
-
-    // publish a number of messages
-    std::cout<<"publishing...";
-    channel.publish("", "hello", "my first message");
-    channel.publish("", "hello", "another message");
-    std::cout<<"done."<<std::endl;
-
-    std::cout<<"closing channel...";
-    channel.close().onSuccess([&connection, &channel]() {
-       
-       // report that channel was closed
-       std::cout << "channel closed...";
-       
-       // close the connection
-        std::cout<<"closing connection...";
-        connection.close();
-        std::cout<<"done."<<std::endl;
-    });
-
-    // create a temporary queue
-    channel.declareQueue(AMQP::exclusive).onSuccess([&connection, &channel, loop](const std::string &name, uint32_t messagecount, uint32_t consumercount) {
-        
-        // report the name of the temporary queue
-        std::cout << "declared queue " << name << std::endl;
-        
-
-        // close the channel
-        //channel.close().onSuccess([&connection, &channel]() {
-        //    
-        //    // report that channel was closed
-        //    std::cout << "channel closed" << std::endl;
-        //    
-        //    // close the connection
-        //    connection.close();
-        //});
-        
-        // construct a timer that is going to publish stuff
-        auto *timer = new MyTimer(loop, &channel, name);
-        
-        //connection.close();
-    });
 
 
     // run the loop
