@@ -52,3 +52,13 @@ Install with
 ```
 make install
 ```
+
+# Notes
+- lately running my docker environment with:
+```
+docker run -it -v C:\Users\okina\rabbitMQ_learning:/rl --network="host" dummy
+```
+- rabbitMQ server run with:
+```
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management
+```
