@@ -33,7 +33,7 @@ Installation will, by default, be in:
 
 Could potentially just apt-get install libssl per [https://stackoverflow.com/questions/16248775/cmake-not-able-to-find-openssl-library](https://stackoverflow.com/questions/16248775/cmake-not-able-to-find-openssl-library)
 ```
-sudo apt-get install libssl-dev
+apt install libssl-dev
 ```
 (may be difficult if our intended target doesn't have a good openssl install readily available)
 TODO: do this without running `apt install libssl-dev`
@@ -51,6 +51,11 @@ make
 Install with 
 ```
 make install
+```
+
+LibEv content requires libEv.  Install with:
+```
+apt install libev-dev -y
 ```
 
 # Notes
