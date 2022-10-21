@@ -152,6 +152,24 @@ public:
 };
 
 
+void closeChannelConnection(AMQP::TcpConnection *myConnection,
+                                AMQP::TcpChannel *myChannel){
+    std::cout<<"closing channel...";
+    myChannel->close()
+        .onSuccess([myConnection]() {                               
+            // close the connection
+            std::cout<<"closing connection...";
+            // don't use deferred responses for connections
+            myConnection->close(); 
+            std::cout<<"done."<<std::endl;
+        })
+        .onError([](const char *message){
+            std::cout << "closing channel failed:  " 
+                << message <<std::endl;
+        });
+}
+
+
 /**
  *  Main program
  *  @return int
@@ -175,14 +193,12 @@ int main(int argc, char* argv[])
     // handler for libev
     MyHandler handler(loop);
 
-    // make a connection
-    AMQP::Address address("amqp://guest:guest@localhost/");
-//    AMQP::Address address("amqps://guest:guest@localhost/");
-    AMQP::TcpConnection connection(&handler, address);
+    // connection creation
+    AMQP::TcpConnection connection(&handler, 
+        AMQP::Address("amqp://guest:guest@localhost/"));
     
-    // we need a channel too
+    // channel creation
     AMQP::TcpChannel channel(&connection);
-
 
     std::cout<<"declaring Queue...";
     channel.declareQueue("hello")
@@ -197,22 +213,7 @@ int main(int argc, char* argv[])
 
             channel.commitTransaction()
                 .onSuccess([&connection, &channel]() {
-                    // all messages were successfully published
-                    // should close channel and connection
-                    std::cout<<"closing channel...";
-                    channel.close()
-                        .onSuccess([&connection, &channel]() {                               
-                            // close the connection
-                            std::cout<<"closing connection...";
-                            // don't use deferred responses for connections
-                            connection.close(); 
-                            std::cout<<"done."<<std::endl;
-                        })
-                        .onError([](const char *message){
-                            std::cout << "closing channel failed:  " 
-                                << message <<std::endl;
-                        });
-
+                    closeChannelConnection(&connection, &channel);
                 })
                 .onError([](const char *message) {
                     // none of the messages were published 
