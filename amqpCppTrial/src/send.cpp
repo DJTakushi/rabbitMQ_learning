@@ -227,19 +227,6 @@ int main(int argc, char* argv[])
             std::cout << "declaring queue failed:  " << message <<std::endl;
         });
 
-    // std::cout<<"closing channel...";
-    // channel.close()
-    //     .onSuccess([&connection, &channel]() {                               
-    //         // close the connection
-    //         std::cout<<"closing connection...";
-    //         connection.close(); // don't use deferred responses here
-    //     })
-    //     .onError([](const char *message){
-    //         std::cout << "closing channel failed:  " << message <<std::endl;
-    //     });
-    // std::cout<<"done."<<std::endl;
-
-
     // run the loop
     ev_run(loop, 0);
 
