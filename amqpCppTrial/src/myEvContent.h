@@ -1,4 +1,6 @@
 #include <ev.h>
+#include <openssl/ssl.h>
+#include <openssl/opensslv.h>
 #include <amqpcpp.h>
 #include <amqpcpp/libev.h>
 
@@ -126,3 +128,7 @@ void closeChannelConnection(AMQP::TcpConnection *myConnection,
                                 AMQP::TcpChannel *myChannel,
                                 void (*cb)(void) = nullptr
                                 );
+
+int publish(std::string address,
+            std::string queue,
+            std::vector<std::string> messages);
