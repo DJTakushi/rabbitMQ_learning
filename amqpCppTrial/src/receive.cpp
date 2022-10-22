@@ -29,7 +29,12 @@ static void cInCb (EV_P_ ev_io *w_, int revents)
         std::cout<<"closing channel+connection..."<<std::endl;
         closeChannelConnection(w->myConnection, w->myChannel, w->closeConnectionCallback);
     }
-    else std::cout << "cin received: \""<<s<<"\"" << std::endl;
+    else{
+        std::cout << "cin received: \""<<s<<"\"" << std::endl;
+        std::string myAddress = "amqp://guest:guest@localhost/";
+        std::string myQueue = "hello";
+        publish(myAddress, myQueue,{s});
+    } 
 }
 
 
@@ -82,10 +87,11 @@ int main(int argc, char* argv[]){
     };
     /*--------------Receive content END-----------------*/
 
-    channel.declareQueue("hello")
-        .onSuccess([&channel, &messageCb, &startCb, &errorCb](){
+    std::string receiveQueueName = "rq";//queue to consume from
+    channel.declareQueue(receiveQueueName)
+        .onSuccess([&channel, &messageCb, &startCb, &errorCb, &receiveQueueName](){
         // start consuming from the queue, and install the callbacks
-        channel.consume("hello")
+        channel.consume(receiveQueueName)
             .onReceived(messageCb)
             .onSuccess(startCb)
             .onError(errorCb);
