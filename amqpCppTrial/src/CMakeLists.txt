@@ -15,3 +15,8 @@ add_executable(iSend send.cpp)
 target_include_directories(iSend PRIVATE ".")
 target_link_libraries(iSend myEvContent)
 target_link_libraries(iSend amqpcpp ev pthread dl ssl)
+
+add_executable(iRec receive.cpp)
+target_include_directories(iRec PRIVATE ".")
+target_link_libraries(iRec myEvContent)
+target_link_libraries(iRec amqpcpp ev pthread dl ssl)
