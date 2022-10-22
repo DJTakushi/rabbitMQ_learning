@@ -121,3 +121,8 @@ public:
         // @todo to be implemented
     }
 };
+
+void closeChannelConnection(AMQP::TcpConnection *myConnection,
+                                AMQP::TcpChannel *myChannel,
+                                void (*cb)(void) = nullptr
+                                );

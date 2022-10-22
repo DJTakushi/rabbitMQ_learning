@@ -6,25 +6,6 @@
 #include <openssl/opensslv.h>
 #include <myEvContent.h>
 
-
-void closeChannelConnection(AMQP::TcpConnection *myConnection,
-                                AMQP::TcpChannel *myChannel){
-    std::cout<<"closing channel...";
-    myChannel->close()
-        .onSuccess([myConnection]() {                               
-            // close the connection
-            std::cout<<"closing connection...";
-            // don't use deferred responses for connections
-            myConnection->close(); 
-            std::cout<<"done."<<std::endl;
-        })
-        .onError([](const char *message){
-            std::cout << "closing channel failed:  " 
-                << message <<std::endl;
-        });
-}
-
-
 /**
  *  Main program
  *  @return int
