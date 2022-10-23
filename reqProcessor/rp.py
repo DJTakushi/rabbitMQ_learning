@@ -26,10 +26,11 @@ class callbackHandler:
 
     # callback to be used by Pika library
     def callback(self, ch, method, properties, body):
-        print(" [x] Received %r" % body)
+        s = body.decode("utf-8")
+        print(" [x] Received "+s)
 
         #publish to 'reply' queue
-        singlePublish('localhost', 'reply', ["reply: %r" % body])
+        singlePublish('localhost', 'reply', ["reply: "+s])
         if self.count >= 0:
             self.count-=1
             if self.count==0:
