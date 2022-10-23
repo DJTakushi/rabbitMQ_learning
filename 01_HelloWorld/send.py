@@ -2,7 +2,7 @@
 import sys
 import pika
 
-def singlePublish(address_i, queue_i, routingKey_i, messages):
+def singlePublish(address_i, routingKey_i, messages):
     connection = pika.BlockingConnection(pika.ConnectionParameters(address_i))
     channel = connection.channel()
 
@@ -15,7 +15,7 @@ def singlePublish(address_i, queue_i, routingKey_i, messages):
     # RabbitMQ will just drop the message.
     # Let's create a hello queue to which the message will be delivered:
 
-    channel.queue_declare(queue=queue_i)
+    channel.queue_declare(queue=routingKey_i)
 
     # At this point we're ready to send a message.
     # Our first message will just contain a string Hello World!
@@ -49,7 +49,6 @@ if __name__ == '__main__':
             messages = []
             address = 'localhost'
             routingKey = 'hello'
-            queue = 'hello'
             for i in sys.argv[1:]:
                 if i[0:2] == "-a":
                     address = i[2:]
@@ -57,12 +56,9 @@ if __name__ == '__main__':
                 elif i[0:2] == "-r":
                     routingKey = i[2:]
                     print("routingKey set to:"+routingKey)
-                elif i[0:2] == "-q":
-                    queue = i[2:]
-                    print("queue set to:"+queue)
                 else:
                     messages.append(i)
-            singlePublish(address,queue,routingKey,messages)
+            singlePublish(address,routingKey,messages)
         else:
             print("sending default")
             print("  set address with:    \"-a[address]\"    (defult is 'localhost')")
