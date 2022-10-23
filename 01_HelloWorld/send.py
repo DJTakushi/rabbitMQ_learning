@@ -65,6 +65,6 @@ if __name__ == '__main__':
             print("  set routingKey with: \"-r[routingKey]\" (default is 'hello')")
             print("  set queue with:      \"-q[queue]\"      (default is 'hello')")
             print("  set messages with additional inputs   (default is 'Hello World!')")
-            singlePublish('localhost','hello','hello',['Hello World!'])
+            singlePublish('localhost','hello',['Hello World!'])
     else:
         print("0 argumnents (?)")
