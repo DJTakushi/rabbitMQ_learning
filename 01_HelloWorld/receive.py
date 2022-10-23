@@ -3,6 +3,8 @@ import pika, sys, os
 
 
 class callbackHandler:
+    # extended callback functionality per:
+    # https://stackoverflow.com/questions/12855332/how-could-i-pass-parameter-to-pika-callback
     def __init__(self, channel_i, connection_i, count_i = -1):
         self.count = count_i
         self.channel = channel_i
