@@ -49,7 +49,7 @@ void closeChannelConnection(AMQP::TcpConnection *myConnection,
 }
 
 int publish(std::string address,
-            std::string queue,
+            std::string routingKey,
             std::vector<std::string> messages){
     int o = 0;
     if(messages.size()>0){
@@ -73,13 +73,13 @@ int publish(std::string address,
         // channel creation
         AMQP::TcpChannel channel(&connection);
 
-        channel.declareQueue(queue)
-            .onSuccess([&connection, &channel, &messages](){
+        channel.declareQueue(routingKey)
+            .onSuccess([&connection, &channel, &routingKey, &messages](){
                 // publish a number of messages
                 channel.startTransaction();
 
                 for(auto it = messages.begin(); it!=messages.end(); it++) 
-                    channel.publish("", "hello", *it);
+                    channel.publish("", routingKey, *it);
 
                 channel.commitTransaction()
                     .onSuccess([&connection, &channel]() {

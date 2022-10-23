@@ -130,5 +130,5 @@ void closeChannelConnection(AMQP::TcpConnection *myConnection,
                                 );
 
 int publish(std::string address,
-            std::string queue,
+            std::string routingKey,
             std::vector<std::string> messages);
