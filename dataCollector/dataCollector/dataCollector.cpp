@@ -5,6 +5,8 @@
 
 #include <myEvContent.h>
 
+    return;
+};
 
 int main(int argc, char* argv[])
 {
