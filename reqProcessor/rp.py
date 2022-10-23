@@ -12,35 +12,51 @@ def singlePublish(address_i, routingKey_i, messages):
         print(" [x] Sent '"+m+"'")
     connection.close()
 
+class callbackHandler:
+    # extended callback functionality per:
+    # https://stackoverflow.com/questions/12855332/how-could-i-pass-parameter-to-pika-callback
+    def __init__(self, channel_i, connection_i, count_i = -1):
+        self.count = count_i
+        self.channel = channel_i
+        self.connection = connection_i
 
-# callback to be used by Pika library for requests queue
-def requestsCB(ch, method, properties, body):
-    print(" [x] Received %r" % body)
-    singlePublish('localhost', 'hello', ["reply: %r" % body])
+    def closeConnectionAndChannel(self):
+        self.channel.close()
+        self.connection.close()
 
+    # callback to be used by Pika library
+    def callback(self, ch, method, properties, body):
+        print(" [x] Received %r" % body)
 
-def main(address):
+        #publish to 'reply' queue
+        singlePublish('localhost', 'reply', ["reply: %r" % body])
+        if self.count >= 0:
+            self.count-=1
+            if self.count==0:
+                self.closeConnectionAndChannel()
+
+def main(address,listenQueue,):
     connection = pika.BlockingConnection(pika.ConnectionParameters(address))
     channel = connection.channel()
-
-    queueName = "reply"
-    # queue declaration is idempotent
-    channel.queue_declare(queue=queueName)
-
-    channel.basic_consume(  queue=queueName,
-                            auto_ack=True,
-                            on_message_callback=requestsCB)
-    
-    print('[*] Waiting for messages.  To exit press CTRL+C')
-    channel.start_consuming()
-
-if __name__ == '__main__':
+    myCallbackHandler = callbackHandler(channel, connection)
     try:
-        address = 'localhost'
-        main(address)
+        # queue declaration is idempotent
+        channel.queue_declare(queue=listenQueue)
+        channel.basic_consume(  queue=listenQueue,
+                                auto_ack=True,
+                                on_message_callback=myCallbackHandler.callback)
+
+        print('[*] Waiting for messages.  To exit press CTRL+C')
+        channel.start_consuming()
     except KeyboardInterrupt:
-        print('Interrupted')
+        print('Interrupting in main()')
+        myCallbackHandler.closeConnectionAndChannel()
         try:
             sys.exit(0)
         except SystemExit:
             os._exit(0)
+
+if __name__ == '__main__':
+    address = 'localhost'
+    listenQueue='request'
+    main(address,listenQueue)
