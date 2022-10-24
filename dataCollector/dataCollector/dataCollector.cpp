@@ -51,6 +51,7 @@ public:
         loop = loop_i;
         connection = connection_i;
         myChannel=channel_i;
+        //std::cout <<"channel_i = "<< channel_i <<std::endl;//debugging
 
         /*--------------std::cin handler content--------------------*/
         w.myChannel=myChannel;
@@ -71,26 +72,31 @@ public:
             std::cout << "consume operation failed" << std::endl;
         };
 
-        // callback operation when a message was received
-        auto messageCb = [&channel_i](const AMQP::Message &message, 
-                            uint64_t deliveryTag, 
-                            bool redelivered) {
-
-            std::cout << "message received: \"";
-            std::cout << message.body() << "\"" << std::endl;
-            // acknowledge the message
-            // channel_i->ack(deliveryTag);
-        };
-        /*--------------Receive content END-----------------*/
-
         std::string receiveQueueName = "reply";//queue to consume from
         myChannel->declareQueue(receiveQueueName)
-            .onSuccess([channel_i, &messageCb, &startCb, &errorCb, &receiveQueueName](){
-            // start consuming from the queue, and install the callbacks
-            channel_i->consume(receiveQueueName)
-                .onReceived(messageCb)
-                .onSuccess(startCb)
-                .onError(errorCb);
+            .onSuccess([channel_i, /*&messageCb,*/ &startCb, &errorCb, &receiveQueueName](){
+                // start consuming from the queue, and install the callbacks
+                // std::cout <<"channel_i (declareQueue.onSuccess) = "<< channel_i <<std::endl;
+                channel_i->consume(receiveQueueName)
+                    .onReceived(
+                        [channel_i](const AMQP::Message &message,uint64_t deliveryTag,bool redelivered) {
+                        std::cout << "message received: \"";
+                        std::cout << message.body() << "\", ";
+                        // acknowledge the message
+                        // std::cout <<"channel_i(messageCb) = "<< channel_i <<std::endl;
+                        channel_i->ack(deliveryTag);
+                        }
+                        /** todo: 
+                        call a queueListener function to handle this in more
+                        modular fashion.  I tried doing this like 'startCb' and
+                        'errorCb' below, but I wasn unable to correctly capture
+                        the channel variable.  Pehaps using the pointer to the 
+                        queueListener will work, but again, my initial attempts
+                        to do so failed.  
+                        **/
+                        )
+                    .onSuccess(startCb)
+                    .onError(errorCb);
             });
 
         std::cout <<"queueListener initalized"<<std::endl;
