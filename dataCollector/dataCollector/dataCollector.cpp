@@ -72,7 +72,7 @@ public:
         };
 
         // callback operation when a message was received
-        auto messageCb = [channel_i](const AMQP::Message &message, 
+        auto messageCb = [&channel_i](const AMQP::Message &message, 
                             uint64_t deliveryTag, 
                             bool redelivered) {
 
