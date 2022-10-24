@@ -1,0 +1,44 @@
+// dot -Tsvg demoSystem.dot > demoSystem.svg
+digraph D {
+    node [shape=record, fontname=Arial];
+
+    subgraph cluster_RequestProcessor {
+        label = "Request Processor";
+        subgraph cluster_rp_py {
+            label = "rp.py";
+            // subgraph rpPyFlow{ 
+            "receive from 'request' queue"->
+            "process request"->
+            "publish to 'reply' queue";
+            // }
+        }
+    }
+
+    subgraph cluster_rabbitMq{
+        label = "Rabbit MQ";
+        subgraph cluster_queues{
+            label = "queues";
+            // rankdir = "TB";
+            request;
+            reply;
+
+            request->"receive from 'request' queue";
+            "publish to 'reply' queue"->reply;
+        }
+    }
+
+    subgraph cluster_dataCollector{
+        label = "Data Collector";
+        subgraph cluster_queues{
+            label = "dc (c++ pogram)";
+            // rankdir = "TB";
+            "receive from 'reply' queue"->
+            "process reply"->
+            "create request"->
+            "publish to 'request' queue";
+
+            reply->"receive from 'reply' queue";
+            "publish to 'request' queue"->request;
+        }
+    }
+}
