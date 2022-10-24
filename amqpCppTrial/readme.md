@@ -59,11 +59,14 @@ apt install libev-dev -y
 ```
 
 # Notes
-- lately running my docker environment with:
+### Docker Build Environment
+lately running my docker environment with:
 ```
-docker run -it -v C:\Users\okina\rabbitMQ_learning:/rl --network="host" dummy
+docker run -it -v C:\Users\okina\rabbitMQ_learning:/rl --network="host" rl
 ```
-- rabbitMQ server run with:
+### RabbitMQ Server
+RabbitMQ's [Downloading and Installing RabbitMQ](https://www.rabbitmq.com/download.html)
+ page recommends experimenting with:
 ```
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.10-management
 ```
