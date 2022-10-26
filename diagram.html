@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="leader-line.min.js"></script>
+</head>
+<body>
+
+    <svg  
+        width="1050" height="300"
+        xmlns="http://www.w3.org/2000/svg"
+        id="inline-1">
+
+        
+        <!-- border -->
+        <rect width="100%" height="100%" rx="20" ry="20"
+            stroke="lightgrey" stroke-width="10"
+            fill="none"
+            />
+
+        <!-- RabitMQ Server -->
+        <svg x="400" y="20" width="200" height="250">
+            <rect width="100%" height="100%" rx="20" ry="20" stroke="orange" stroke-width="10" fill="none"/>
+            <text x="50%" y="20" text-anchor="middle" fill="orange">RabbitMQ Server</text>
+                <!-- Queues -->
+                <svg x="5%" y="15%" width="90%" height="85%">
+                <rect width="100%" height="100%" rx="5%" ry="5%" stroke="orange" fill="none"/>
+                <text x="50%" y="15" text-anchor="middle">Queues</text>
+                    <svg x="5%" y="15%" width="90%" height="30%">
+                        <rect width="100%" height="100%" stroke="grey" fill="none" id="queueRequest"/>
+                        <text x="50%" y="50%" text-anchor="middle" >request</text>
+                    </svg>
+                    <svg x="5%" y="50%" width="90%" height="30%">
+                        <rect width="100%" height="100%" stroke="grey" fill="none" id="queueReply"/>
+                        <text x="50%" y="50%" text-anchor="middle">reply</text>
+                    </svg>
+                </svg>
+        </svg>
+
+        <!-- Request Processor -->
+        <svg x="10" y="40" width="350" height="200">
+            <rect width="100%" height="100%" rx="20" ry="20" stroke="goldenrod" stroke-width="10" fill="none"/>
+            <text x="50%" y="20" text-anchor="middle" fill="goldenrod">Request Processor</text>
+                <!-- rp.p-y -->
+                <svg x="5%" y="15%" width="90%" height="85%">
+                <rect width="100%" height="100%" rx="5%" ry="5%" stroke="goldenrod" fill="none"/>
+                <text x="50%" y="15" text-anchor="middle">rp.py</text>
+                    <svg x="5%" y="15%" width="90%" height="80%">
+                        <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                        <text x="5" y="15" fill="black" >
+                            <tspan x="5"  y="20"> 1. Create connection and channel</tspan>
+                            <tspan x="5"  y="40" id="queueRequestConsume"> 2. Consume 'request' queue continuously</tspan>
+                            <tspan x="25" y="60">     - on receive:</tspan>
+                            <tspan x="35" y="80">       1. process data</tspan>
+                            <tspan x="35" y="100" id="queueReplyPublish">       2. publish reply on 'reply' queue</tspan>
+                        </text>
+                    </svg>
+                </svg>
+        </svg>
+
+        <!-- Data Collector  -->
+        <svg x="650" y="40" width="350" height="200">
+            <rect width="100%" height="100%" rx="20" ry="20" stroke="blue" stroke-width="10" fill="none"/>
+            <text x="50%" y="20" text-anchor="middle" fill="blue">Data Collector</text>
+                <svg x="5%" y="15%" width="90%" height="85%">
+                <rect width="100%" height="100%" rx="5%" ry="5%" stroke="blue" fill="none"/>
+                <text x="50%" y="15" text-anchor="middle">dc (c++ executable)</text>
+                    <svg x="5%" y="15%" width="90%" height="80%">
+                        <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                        <text x="5" y="15" fill="black" >
+                            <tspan x="5"  y="20">  1. Create connection and channel</tspan>
+                            <tspan x="5"  y="40" id="queueReplyConsume"> 2. Consume 'reply' queue continuously</tspan>
+                            <tspan x="35" y="60">     - on receive: do things[?]</tspan>
+                            <tspan x="5"  y="80">3. On cin input:</tspan>
+                            <tspan x="25" y="100" id="queueRequestPublish">     - add input to 'request'queue</tspan>
+                        </text>
+                    </svg>
+                </svg>
+        </svg>
+    </svg>
+</body>
+<script type="text/javascript">
+    window.onload=function() {
+        new LeaderLine(
+            document.getElementById('queueRequestPublish'),
+            document.getElementById('queueRequest'),
+            {color:'red', dash: {animation: true}});
+         new LeaderLine(
+            document.getElementById('queueRequest'),
+            document.getElementById('queueRequestConsume'),
+            {color:'red', dash: {animation: true}});
+        new LeaderLine(
+            document.getElementById('queueReplyPublish'),
+            document.getElementById('queueReply'),
+            {color:'green', dash: {animation: true}});
+         new LeaderLine(
+            document.getElementById('queueReply'),
+            document.getElementById('queueReplyConsume'),
+            {color:'green', dash: {animation: true}});
+    };
+  </script>
+</html>
