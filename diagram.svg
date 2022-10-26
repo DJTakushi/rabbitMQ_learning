@@ -1,0 +1,107 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg  viewbox="0 0 100 100"  xmlns="http://www.w3.org/2000/svg" id="inline-1">
+<svg width="1000" height="400" >
+<script href="leader-line.min.js" />
+<g>
+    <!-- <text x="50%" y="50%" 
+        dominant-baseline="middle"
+        text-anchor="middle" 
+        fill="black">RabbitMQ Server</text> -->
+
+ 
+    <!-- border -->
+    <rect width="100%" height="100%"
+        stroke="black" fill="none" />
+
+    <!-- RabitMQ Server -->
+    <svg x="400" y="50" width="150" height="200">
+    <rect width="100%" height="100%" stroke="grey" fill="none"/>
+    <text x="50%" y="15" text-anchor="middle">RabbitMQ Server</text>
+        <!-- Queues -->
+        <svg x="5%" y="15%" width="90%" height="85%">
+        <rect width="100%" height="100%" stroke="grey" fill="none"/>
+        <text x="50%" y="15" text-anchor="middle">Queues</text>
+            <svg x="5%" y="15%" width="90%" height="30%">
+                <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                <text x="50%" y="50%" text-anchor="middle">request</text>
+            </svg>
+            <svg x="5%" y="50%" width="90%" height="30%">
+                <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                <text x="50%" y="50%" text-anchor="middle">reply</text>
+            </svg>
+        </svg>
+    </svg>
+
+    <!-- Request Processor -->
+   <svg x="10" y="40" width="350" height="200">
+    <rect width="100%" height="100%" stroke="grey" fill="none"/>
+    <text x="50%" y="15" text-anchor="middle">Request Processor</text>
+        <!-- rp.p-y -->
+        <svg x="5%" y="15%" width="90%" height="85%">
+        <rect width="100%" height="100%" stroke="grey" fill="none"/>
+        <text x="50%" y="15" text-anchor="middle">rp.py</text>
+            <svg x="5%" y="15%" width="90%" height="80%">
+                <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                <text x="5" y="15" fill="black" >
+                    <tspan x="5"  y="20"> 1. Create connection and channel</tspan>
+                    <tspan x="5"  y="40"> 2. Consume 'request' queue continuously</tspan>
+                    <tspan x="25" y="60">     - on receive:</tspan>
+                    <tspan x="35" y="80">       1. process data</tspan>
+                    <tspan x="35" y="100">       2. publish reply on 'reply' queue</tspan>
+                </text>
+            </svg>
+        </svg>
+    </svg>
+
+    <!-- Data Collector  -->
+   <svg x="600" y="40" width="350" height="200">
+    <rect width="100%" height="100%" stroke="grey" fill="none"/>
+    <text x="50%" y="15" text-anchor="middle">Data Collector</text>
+        <svg x="5%" y="15%" width="90%" height="85%">
+        <rect width="100%" height="100%" stroke="grey" fill="none"/>
+        <text x="50%" y="15" text-anchor="middle">dc (c++ executable)</text>
+            <svg x="5%" y="15%" width="90%" height="80%">
+                <rect width="100%" height="100%" stroke="grey" fill="none"/>
+                <text x="5" y="15" fill="black" id="start" >
+                    <tspan x="5"  y="20">  1. Create connection and channel</tspan>
+                    <tspan x="5"  y="40"> 2. Consume 'reply' queue continuously</tspan>
+                    <tspan x="35" y="60">     - on receive: do things[?]</tspan>
+                    <tspan x="5"  y="80">3. On cin input:</tspan>
+                    <tspan x="25" y="100">     - add input to 'request'queue</tspan>
+                </text>
+            </svg>
+        </svg>
+    </svg>
+    
+    <!-- dummy -->
+    <svg x="80%" y="80%" width="20%" height="20%">
+        <rect width="100%" height="100%" stroke="black" fill="none"  />
+        <!-- dummy circle -->
+        <circle 
+            cx="50%" cy="50%" r="40%" 
+            stroke="black" 
+            stroke-width="3" 
+            fill="orange"
+            id="end" />
+    </svg>
+    
+</g>
+<!-- 
+ <script>
+    <![CDATA[ 
+    var startE = document.getElementById('start'); 
+    var endE = document.getElementById('end'); 
+    console.log(startE)
+    console.log(endE)
+    new LeaderLine(startE,endE);
+     ]]>
+  </script> -->
+  Sorry, your browser does not support inline SVG.  
+
+
+
+
+
+
+</svg>
+</svg>
