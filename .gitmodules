@@ -7,3 +7,15 @@
 [submodule "amqpCppTrial/--force"]
 	path = amqpCppTrial/--force
 	url = https://github.com/openssl/openssl.git
+[submodule "libs/AMQP-CPP"]
+	path = libs/AMQP-CPP
+	url = https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git
+[submodule "libs/cereal"]
+	path = libs/cereal
+	url = https://github.com/USCiLab/cereal.git
+[submodule "libs/openssl"]
+	path = libs/openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "libs/libev"]
+	path = libs/libev
+	url = https://github.com/enki/libev.git
